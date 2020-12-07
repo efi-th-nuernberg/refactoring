@@ -30,9 +30,12 @@ public class Application {
 
         Customer customer_1 = customers.get( 0 );
 
-        customer_1.addRental( new Rental( movies.get( 0 ), 3 ) );
+        customer_1.addRental( new Rental( movies.get( 0 ), 2 ) );
+        customer_1.addRental( new Rental( movies.get( 1 ), 3 ) );
         customer_1.addRental( new Rental( movies.get( 2 ), 3 ) );
+        customer_1.addRental( new Rental( movies.get( 3 ), 4 ) );
         customer_1.addRental( new Rental( movies.get( 4 ), 3 ) );
+        customer_1.addRental( new Rental( movies.get( 5 ), 4 ) );
         String statement = customer_1.statement();
         System.out.println( statement );
     }

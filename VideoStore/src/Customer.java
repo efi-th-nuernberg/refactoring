@@ -51,7 +51,7 @@ public class Customer {
                 frequentRenterPoints++;
 
             // show figures for this rental
-            result += "\t" + curRental.getMovie().getTitle() + "\t" + String.valueOf( thisAmount ) + "\n";
+            result += "\t" + curRental.getMovie().getTitle() + "\t days rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( thisAmount ) + "\n";
 
         }
         // add footer lines
