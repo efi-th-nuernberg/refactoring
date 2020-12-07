@@ -23,9 +23,19 @@
  
  `Rental` repräsentiert eine Ausleihe eines Films durch einen Kunden.
  
- `Customer` repräsentiert einen Kunden der Videothek. Diese Klasse hat neben den
- Zugriffsmethoden auch eine Methode statement(), die eine Rechnung ausgibt.
+ `Customer` repräsentiert einen Kunden der Videothek. Diese Klasse hat neben den Zugriffsmethoden auch eine Methode statement(), die eine Rechnung ausgibt.
  
+ Was halten Sie von dem Design dieses Programms?
+ 
+ Ich würde es nicht als besonders gelungen bezeichnen. Für ein einfaches Programm wie 
+ dieses machts das nichts. Es ist nichts gegen ein "Quick-and-Dirty-Programm" einzuwenden,
+ solange es so einfach ist. Wäre der Code jedoch Teil eines komplexeren Systems, das 
+ regelmäßig erweitert werden muss, so hätte ich ein echtes Problem mit dem Programm.
+ 
+ Obwohl ja das Programm irgendwie funktioniert ist es nicht nur ein ästhetisches Problem 
+ gegenüber hässlichen Code. Spätestens dann, wenn wir den Code ändern müssen, um z.B. 
+ eine andere Preisberechnung oder eine anderes Ausgabeformat für die Rechnung schreiben
+ sollen.   
  
  
  
