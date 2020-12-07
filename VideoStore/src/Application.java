@@ -41,7 +41,7 @@ public class Application {
         System.out.println( "application finished" );
     }
 
-    private ArrayList<Movie> movies = new ArrayList<>();
-    private ArrayList<Customer> customers = new ArrayList<>();
+    private final ArrayList<Movie> movies = new ArrayList<>();
+    private final ArrayList<Customer> customers = new ArrayList<>();
 }
 
