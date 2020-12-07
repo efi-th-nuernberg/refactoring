@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Application {
 
@@ -14,6 +11,7 @@ public class Application {
 
     public void init() {
         System.out.println( "initializing application" );
+
         movies.add( new Movie("Regular_Movie_1   ", Movie.REGULAR ) );
         movies.add( new Movie("Regular_Movie_2   ", Movie.REGULAR ) );
         movies.add( new Movie("Children_Movie_1  ", Movie.CHILDRENS ) );
