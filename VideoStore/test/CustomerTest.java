@@ -153,4 +153,55 @@ class CustomerTest {
         System.out.println( "test_statement_one_new_release_three_days" );
         System.out.println( invoice_text );
     }
+
+    @Test
+    void test_statement_with_all_kinds_of_movies_one_and_four_days() {
+        String expected_text = "Rental Record for customer A\n" +
+                "\tregular_movie_1\tdays rented: 1  = 2.0\n" +
+                "\tregular_movie_2\tdays rented: 4  = 5.0\n" +
+                "\tchildren_movie_1\tdays rented: 1  = 1.5\n" +
+                "\tchildren_movie_2\tdays rented: 4  = 3.0\n" +
+                "\tnew_release_movie_1\tdays rented: 1  = 3.0\n" +
+                "\tnew_release_movie_2\tdays rented: 4  = 12.0\n" +
+                "Amount owed is 26.5\n" +
+                "You earned 7 frequent renter points";
+
+        {
+            Movie regular_movie_1 = new Movie( "regular_movie_1", Movie.REGULAR );
+            Rental rental = new Rental( regular_movie_1, 1 );
+            customer.addRental( rental );
+        }
+        {
+            Movie regular_movie_4 = new Movie( "regular_movie_2", Movie.REGULAR );
+            Rental rental = new Rental( regular_movie_4, 4 );
+            customer.addRental( rental );
+        }
+        {
+            Movie children_movie_1 = new Movie( "children_movie_1", Movie.CHILDRENS );
+            Rental rental = new Rental( children_movie_1, 1 );
+            customer.addRental( rental );
+        }
+        {
+            Movie children_movie_4 = new Movie( "children_movie_2", Movie.CHILDRENS );
+            Rental rental = new Rental( children_movie_4, 4 );
+            customer.addRental( rental );
+        }
+        {
+            Movie new_release_movie_1 = new Movie( "new_release_movie_1", Movie.NEW_RELEASE );
+            Rental rental = new Rental( new_release_movie_1, 1 );
+            customer.addRental( rental );
+        }
+        {
+            Movie new_release_movie_4 = new Movie( "new_release_movie_2", Movie.NEW_RELEASE );
+            Rental rental = new Rental( new_release_movie_4, 4 );
+            customer.addRental( rental );
+        }
+
+        String invoice_text = customer.statement();
+        assertEquals( expected_text, invoice_text );
+
+        System.out.println( "test_statement_with_all_kinds_of_movies_one_and_four_days" );
+        System.out.println( invoice_text );
+    }
+
 }
