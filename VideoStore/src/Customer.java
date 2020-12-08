@@ -20,16 +20,16 @@ public class Customer {
     public String statement() {
         // add header line
         StringBuilder result = new StringBuilder();
-        result.append( "Rental Record for " + getName() + "\n" );
+        result.append( "Rental Record for " ).append( getName() ).append( "\n" );
 
         // add line for each rental
         for( Rental curRental : rentals ) {
-            result.append( "\t" + curRental.getMovie().getTitle() + "\tdays rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( curRental.getFee() ) + "\n" );
+            result.append( "\t" ).append( curRental.getMovie().getTitle() ).append( "\tdays rented: " ).append( curRental.getDaysRented() ).append( "  = " ).append( String.valueOf( curRental.getFee() ) ).append( "\n" );
         }
 
         // add footer lines
-        result.append( "Amount owed is " + String.valueOf( getTotalAmount() ) + "\n" );
-        result.append( "You earned " + String.valueOf( getFrequentRenterPoints() ) + " frequent renter points" );
+        result.append( "Amount owed is " ).append( String.valueOf( getTotalAmount() ) ).append( "\n" );
+        result.append( "You earned " ).append( String.valueOf( getFrequentRenterPoints() ) ).append( " frequent renter points" );
         return result.toString();
     }
 
