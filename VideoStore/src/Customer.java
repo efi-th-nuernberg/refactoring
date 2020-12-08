@@ -18,45 +18,34 @@ public class Customer {
     }
 
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
+        // add header line
+        StringBuilder result = new StringBuilder();
+        result.append( "Rental Record for " + getName() + "\n" );
 
-        String result = "Rental Record for " + getName() + "\n";
+        // add line for each rental
         for( Rental curRental : rentals ) {
-            double thisAmount = 0;
-
-            // determine amounts for each line
-            switch( curRental.getMovie().getPriceCode() ) {
-                case Movie.REGULAR:
-                    thisAmount += 2;
-                    if( curRental.getDaysRented() > 2 )
-                        thisAmount += ( curRental.getDaysRented() - 2 ) * 1.5;
-                    break;
-                case Movie.NEW_RELEASE:
-                    thisAmount += curRental.getDaysRented() * 3;
-                    break;
-                case Movie.CHILDRENS:
-                    thisAmount += 1.5;
-                    if( curRental.getDaysRented() > 3 )
-                        thisAmount += ( curRental.getDaysRented() - 3 ) * 1.5;
-                    break;
-
-            }
-            totalAmount += thisAmount;
-
-            // add frequent renter points
-            frequentRenterPoints++;
-            // add bonus for a two day new release rental
-            if( ( curRental.getMovie().getPriceCode() == Movie.NEW_RELEASE ) && curRental.getDaysRented() > 1 )
-                frequentRenterPoints++;
-
-            // show figures for this rental
-            result += "\t" + curRental.getMovie().getTitle() + "\tdays rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( thisAmount ) + "\n";
-
+            result.append( "\t" + curRental.getMovie().getTitle() + "\tdays rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( curRental.getFee() ) + "\n" );
         }
+
         // add footer lines
-        result += "Amount owed is " + String.valueOf( totalAmount ) + "\n";
-        result += "You earned " + String.valueOf( frequentRenterPoints ) + " frequent renter points";
-        return result;
+        result.append( "Amount owed is " + String.valueOf( getTotalAmount() ) + "\n" );
+        result.append( "You earned " + String.valueOf( getFrequentRenterPoints() ) + " frequent renter points" );
+        return result.toString();
+    }
+
+    private double getTotalAmount() {
+        double totalAmount = 0.0;
+        for( Rental curRental : rentals ) {
+            totalAmount += curRental.getFee();
+        }
+        return totalAmount;
+    }
+
+    private int getFrequentRenterPoints() {
+        int frequentRenterPoints = 0;
+        for( Rental curRental : rentals ) {
+            frequentRenterPoints += curRental.getFrequentRenterPoints();
+        }
+        return frequentRenterPoints;
     }
 }
