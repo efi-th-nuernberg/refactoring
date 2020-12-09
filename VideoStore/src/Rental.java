@@ -8,14 +8,23 @@ public class Rental {
         this.daysRented = daysRented;
     }
 
-    public  int getFrequentRenterPoints() {
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public int getDaysRented() {
+        return daysRented;
+    }
+
+    public  int calculateBonus() {
         if( ( getMovie().getPriceCode() == Movie.NEW_RELEASE ) && getDaysRented() > 1 )
+            // extra bonus point for new released movies
             return 2;
         else
             return 1;
     }
 
-    public double getFee() {
+    public double calculateFee() {
         double thisAmount = 0;
 
         // determine amounts for each line
@@ -36,14 +45,5 @@ public class Rental {
 
         }
         return thisAmount;
-    }
-
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public int getDaysRented() {
-        return daysRented;
     }
 }

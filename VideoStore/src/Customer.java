@@ -24,7 +24,7 @@ public class Customer {
 
         // add line for each rental
         for( Rental curRental : rentals ) {
-            result.append( "\t" ).append( curRental.getMovie().getTitle() ).append( "\tdays rented: " ).append( curRental.getDaysRented() ).append( "  = " ).append( String.valueOf( curRental.getFee() ) ).append( "\n" );
+            result.append( "\t" ).append( curRental.getMovie().getTitle() ).append( "\tdays rented: " ).append( curRental.getDaysRented() ).append( "  = " ).append( String.valueOf( curRental.calculateFee() ) ).append( "\n" );
         }
 
         // add footer lines
@@ -36,7 +36,7 @@ public class Customer {
     private double getTotalAmount() {
         double totalAmount = 0.0;
         for( Rental curRental : rentals ) {
-            totalAmount += curRental.getFee();
+            totalAmount += curRental.calculateFee();
         }
         return totalAmount;
     }
@@ -44,7 +44,7 @@ public class Customer {
     private int getFrequentRenterPoints() {
         int frequentRenterPoints = 0;
         for( Rental curRental : rentals ) {
-            frequentRenterPoints += curRental.getFrequentRenterPoints();
+            frequentRenterPoints += curRental.calculateBonus();
         }
         return frequentRenterPoints;
     }

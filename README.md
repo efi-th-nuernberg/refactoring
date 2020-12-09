@@ -119,10 +119,21 @@ Die Tests sollten also sinnvolle und interessante Testfälle dieser Kombinatione
  
  **Aufgabe:** Welche Zerlegung der Methode `statement()` schlagen Sie vor?
  
+Die Methode statement hat drei Verantwortlichkeiten, die wir trennen sollten.
+
+1. Sie berechnet die Leihgebühren 
+    a) für jeden Leihevorgang
+    b) insgesamt, die Gesamtgebühr
+
+2. Sie berechnet die Bonuspunkte
+    a) für jeden Leihvorgang
+    b) insgesamt
+
+3. Sie erzeugt den Ausgabetext für die Rechnung. 
+
 #### Berechnung der Leihgebühr für eine Rental in Methode extrahieren
 
 Es handelt sich hier um die Zeilen 7 bis 25. Wir können die Berechnung als eigene Methode herausziehen.
-
 
 ```java
  1  public String statement() {
@@ -168,6 +179,253 @@ Es handelt sich hier um die Zeilen 7 bis 25. Wir können die Berechnung als eige
 41          return result;
 42      }
 ```
- 
+
+Die Signatur der neuen Methode könnte so aussehen:
+
+`double calculateAmountFor( Rental curRental );`
+
+und statement() jetzt so:
+
+```java
+ 1     public String statement() {
+ 2         double totalAmount = 0;
+ 3         int frequentRenterPoints = 0;
+ 4 
+ 5         String result = "Rental Record for " + getName() + "\n";
+ 6         for( Rental curRental : rentals ) {
+ 7             double thisAmount = calculateAmountFor( curRental );
+ 8             totalAmount += thisAmount;
+ 9 
+10             // add frequent renter points
+11             frequentRenterPoints++;
+12             // add bonus for a two day new release rental
+13             if( ( curRental.getMovie().getPriceCode() == Movie.NEW_RELEASE ) && curRental.getDaysRented() > 1 )
+14                frequentRenterPoints++;
+
+15            // show figures for this rental
+16            result += "\t" + curRental.getMovie().getTitle() + "\tdays rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( thisAmount ) + "\n";
+17
+18         }
+19         // add footer lines
+20         result += "Amount owed is " + String.valueOf( totalAmount ) + "\n";
+21         result += "You earned " + String.valueOf( frequentRenterPoints ) + " frequent renter points";
+22         return result;
+23     }
+```
+
+Das Gleiche können wir für die Berechnung der Bonuspunkte (Zeilen 10 - 14) durchführen.
+Wir extrahieren `int calculateFrequentRenterPointsFor( Rental curRental )`
+
+und erhalten nun:
+  ```java
+      public String statement() {
+        double totalAmount = 0;
+        int frequentRenterPoints = 0;
+
+        String result = "Rental Record for " + getName() + "\n";
+        for( Rental curRental : rentals ) {
+            
+            double thisAmount = calculateAmountFor( curRental );
+            totalAmount += thisAmount;
+            
+            // add frequent renter points            
+            frequentRenterPoints += calculateFrequentRenterPointsFor( curRental );
+
+            // show figures for this rental
+            result += "\t" + curRental.getMovie().getTitle() + "\tdays rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( thisAmount ) + "\n";
+        }
+        // add footer lines
+        result += "Amount owed is " + String.valueOf( totalAmount ) + "\n";
+        result += "You earned " + String.valueOf( frequentRenterPoints ) + " frequent renter points";
+        return result;
+    }
+```
+
+und die extrahierte Methode:
+```java
+    double calculateAmountFor( Rental curRental ) {
+        double thisAmount = 0;
+
+        // determine amounts for each line
+        switch( curRental.getMovie().getPriceCode() ) {
+            case Movie.REGULAR:
+                thisAmount += 2;
+                if( curRental.getDaysRented() > 2 )
+                    thisAmount += ( curRental.getDaysRented() - 2 ) * 1.5;
+                break;
+            case Movie.NEW_RELEASE:
+                thisAmount += curRental.getDaysRented() * 3;
+                break;
+            case Movie.CHILDRENS:
+                thisAmount += 1.5;
+                if( curRental.getDaysRented() > 3 )
+                    thisAmount += ( curRental.getDaysRented() - 3 ) * 1.5;
+                break;
+
+        }
+        return thisAmount;
+    }
+```
+
+Natürlich führen wir nach jedem Schritt die Tests erneut aus.
+
+Die extrahierte Methode `calculateFrequentRenterPointsFor` könnte so aussehen:
+  
+```java
+    int calculateFrequentRenterPointsFor( Rental curRental ) {
+        int frequentRenterPoints = 0;
+        frequentRenterPoints++;
+
+        // add bonus for a two day new release rental
+        if( ( curRental.getMovie().getPriceCode() == Movie.NEW_RELEASE ) && curRental.getDaysRented() > 1 )
+            frequentRenterPoints++;
+        return frequentRenterPoints;
+    }
+```
+
+das sollten wir vereinfachen:
+
+```java
+    int calculateFrequentRenterPointsFor( Rental curRental ) {
+        if( ( curRental.getMovie().getPriceCode() == Movie.NEW_RELEASE ) && curRental.getDaysRented() > 1 ) {
+            // 2 bonus points for a two day new release rental
+             return 2;
+        }
+        else {
+            // 1 bonus point for others
+            return 1;
+        }
+    }
+```
+
+Vielleicht fällt Ihnen auf, dass in den beiden extrahierten Methoden überhaupt keine Daten von Customer benutzt werden, 
+sondern nur auf Rental zugegriffen wird. Das deutet darauf hin, dass die Methoden in der falschen Klasse liegen.
+Beide Methoden gehören in die Klasse Rental.
+
+Wir ziehen die Methoden um und benennen sie neu, die Klasse Rental sieht nun so aus:
+
+```java
+public class Rental {
+
+    private final Movie movie;
+    private final int daysRented;
+
+    public Rental( Movie movie, int daysRented ) {
+        this.movie = movie;
+        this.daysRented = daysRented;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public int getDaysRented() {
+        return daysRented;
+    }
+
+    public double calculateFee() {
+        double thisAmount = 0;
+
+        // determine amounts for each line
+        switch( this.getMovie().getPriceCode() ) {
+            case Movie.REGULAR:
+                thisAmount += 2;
+                if( this.getDaysRented() > 2 )
+                    thisAmount += ( this.getDaysRented() - 2 ) * 1.5;
+                break;
+            case Movie.NEW_RELEASE:
+                thisAmount += this.getDaysRented() * 3;
+                break;
+            case Movie.CHILDRENS:
+                thisAmount += 1.5;
+                if( this.getDaysRented() > 3 )
+                    thisAmount += ( this.getDaysRented() - 3 ) * 1.5;
+                break;
+
+        }
+        return thisAmount;
+    }
+
+    public int calculateBonus() {
+        if( ( this.getMovie().getPriceCode() == Movie.NEW_RELEASE ) && this.getDaysRented() > 1 ) {
+            // 2 bonus points for a two day new release rental
+            return 2;
+        }
+        else {
+            // 1 bonus point for others
+            return 1;
+        }
+    }
+}
+```
+
+Die Methode statement() hat nun folgendes Aussehen:
+
+```java
+    public String statement() {
+        double totalAmount = 0;
+        int frequentRenterPoints = 0;
+
+        String result = "Rental Record for " + getName() + "\n";
+        for( Rental curRental : rentals ) {
+
+            double thisAmount = curRental.calculateFee();
+            totalAmount += thisAmount;
+
+            // add frequent renter points
+            frequentRenterPoints += curRental.calculateBonus();
+
+            // show figures for this rental
+            result += "\t" + curRental.getMovie().getTitle() + "\tdays rented: " + curRental.getDaysRented() + "  = " +  String.valueOf( thisAmount ) + "\n";
+        }
+        // add footer lines
+        result += "Amount owed is " + String.valueOf( totalAmount ) + "\n";
+        result += "You earned " + String.valueOf( frequentRenterPoints ) + " frequent renter points";
+        return result;
+    }
+```
+
+Wir lagern die Berechnung der Summen für die Leihgebühr und die Bonuspunkte in zwei Methoden aus:
+
+```java    
+    private double getTotalAmount() {
+        double totalAmount = 0.0;
+        for( Rental curRental : rentals ) {
+            totalAmount += curRental.calculateFee();
+        }
+        return totalAmount;
+    }
+
+    private int getFrequentRenterPoints() {
+        int frequentRenterPoints = 0;
+        for( Rental curRental : rentals ) {
+            frequentRenterPoints += curRental.calculateBonus();
+        }
+        return frequentRenterPoints;
+    }
+```
+
+ und nutzen die beiden neuen privaten Methoden in `statement()`,
+ wobei wir jetzt die Bibliotheks-Klasse `StringBuilder` verwenden, um den Text zusammenzubauen:
+
+```java
+public String statement() {
+        // add header line
+        StringBuilder result = new StringBuilder();
+        result.append( "Rental Record for " ).append( getName() ).append( "\n" );
+
+        // add line for each rental
+        for( Rental curRental : rentals ) {
+            result.append( "\t" ).append( curRental.getMovie().getTitle() ).append( "\tdays rented: " ).append( curRental.getDaysRented() ).append( "  = " ).append( String.valueOf( curRental.calculateFee() ) ).append( "\n" );
+        }
+
+        // add footer lines
+        result.append( "Amount owed is " ).append( String.valueOf( getTotalAmount() ) ).append( "\n" );
+        result.append( "You earned " ).append( String.valueOf( getFrequentRenterPoints() ) ).append( " frequent renter points" );
+        return result.toString();
+    }
+```
+normalerweise mach man das natürlich in zwei Schritten.
+
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
