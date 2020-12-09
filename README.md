@@ -107,15 +107,18 @@ Die Tests sollten also sinnvolle und interessante Testfälle dieser Kombinatione
 
 **Aufgabe:** Bestimmen Sie welche Kombinationen sinnvoll sind. Welche Tests planen Sie?
 
-### Schritt 2: Zerlegen und Umverteilen der Methode statement
-
-Nachdem wir die Tests haben, können wir damit beginnen, den Code zu verbessern. Jetzt haben wir uns durch die Testfälle ein Sicherheitsnetz geschaffen und bei Änderungen können wir immer sofort sehen, ob was schief geht.
-
-Wie könnten wir die Methode zerlegen?
-
-Denken Sie hier an die Verantwortlichkeiten der Methode - was macht `statement()` eigentlich?
-
-**Aufgabe:** Welche Verantwortlichkeiten hat statement()?
-
+ ### Schritt 2: Zerlegen und Umverteilen der Methode statement
+ 
+ Nachdem wir die Tests haben, können wir damit beginnen, den Code zu verbessern. Jetzt haben wir uns durch die Testfälle ein Sicherheitsnetz geschaffen und bei Änderungen können wir immer sofort sehen, ob was schief geht.
+ 
+ Wie könnten wir die Methode zerlegen?
+ 
+ Denken Sie hier an die Verantwortlichkeiten der Methode - was macht `statement()` eigentlich?
+ 
+ **Aufgabe:** Welche Verantwortlichkeiten hat statement()?
+ 
+ **Aufgabe:** Welche Zerlegung der Methode `statement()` schlagen Sie vor?
+ 
+ 
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
