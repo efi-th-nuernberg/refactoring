@@ -93,7 +93,19 @@ public String statement() {
 
 Die Methode gibt einen String zurück. Also können wir hier ein paar Tests schreiben, die überprüfen, wie der zurückgegebene String momentan aussieht.
 
+### Schritt 1: Tests für die Methode statement() hinzufügen
 
+Was sollten wir alles Testen? Sehen sie sich dazu die statement-Methode an. Sie berechnet zum einen die Leihgebühr. Dabei ist die Höhe der Leihgebühr abhängig von:
+
+* der Art des Mediums (regular, children's, new release)
+
+* der Leihdauer
+
+Weiterhin werden Bonuspunkte vergeben - auch hier gibt es einen Sonderfall. Beide Fälle müssen bei den Tests berücksichtigt werden.
+
+Die Tests sollten also sinnvolle und interessante Testfälle dieser Kombinationen enthalten.
+
+**Aufgabe:** Bestimmen Sie welche Kombinationen sinnvoll sind. Welche Tests planen Sie?
 
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
