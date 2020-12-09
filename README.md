@@ -119,6 +119,55 @@ Die Tests sollten also sinnvolle und interessante Testfälle dieser Kombinatione
  
  **Aufgabe:** Welche Zerlegung der Methode `statement()` schlagen Sie vor?
  
+#### Berechnung der Leihgebühr für eine Rental in Methode extrahieren
+
+Es handelt sich hier um die Zeilen 7 bis 25. Wir können die Berechnung als eigene Methode herausziehen.
+
+
+```java
+ 1  public String statement() {
+ 2          double totalAmount = 0;
+ 3          int frequentRenterPoints = 0;
+ 4
+ 5          String result = "Rental Record for " + getName() + "\n";
+ 6          for( Rental curRental : rentals ) {
+ 7              double thisAmount = 0;
+ 8
+ 9              // determine amounts for each line
+10              switch( curRental.getMovie().getPriceCode() ) {
+11                  case Movie.REGULAR:
+12                      thisAmount += 2;
+13                      if( curRental.getDaysRented() > 2 )
+14                          thisAmount += ( curRental.getDaysRented() - 2 ) * 1.5;
+15                      break;
+16                  case Movie.NEW_RELEASE:
+17                      thisAmount += curRental.getDaysRented() * 3;
+18                      break;
+19                  case Movie.CHILDRENS:
+20                      thisAmount += 1.5;
+21                      if( curRental.getDaysRented() > 3 )
+22                          thisAmount += ( curRental.getDaysRented() - 3 ) * 1.5;
+23                    break;
+24
+25              }
+26              totalAmount += thisAmount;
+27
+28              // add frequent renter points
+29              frequentRenterPoints++;
+30              // add bonus for a two day new release rental
+31              if( ( curRental.getMovie().getPriceCode() == Movie.NEW_RELEASE ) && curRental.getDaysRented() > 1 )
+32                  frequentRenterPoints++;
+33
+34              // show figures for this rental
+35              result += "\t" + curRental.getMovie().getTitle() + "\t days rented: " + curRental.getDaysRented() + "  =   " +  String.valueOf( thisAmount ) + "\n";
+36
+37          }
+38          // add footer lines
+39          result += "Amount owed is " + String.valueOf( totalAmount ) + "\n";
+40          result += "You earned " + String.valueOf( frequentRenterPoints ) + " frequent renter points";
+41          return result;
+42      }
+```
  
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
