@@ -18,7 +18,7 @@
 
  Die Elemente der Videothek werden durch drei Klassen repräsentiert.
 
-  ![Klassendiagramm Ausgangspunkt](./VideoStore/doc/VideostoreClasses_000.png)
+  
 
  **Movie** ist nur eine einfache Datenklasse.
 
@@ -429,6 +429,108 @@ public String statement() {
 Normalerweise macht man das natürlich in zwei Schritten. Dabei die Ausführung der Tests nie vergessen!
 
 Jetzt ist sehr viel einfacher, eine Methode html-Statement zu schreiben!
+Das können Sie ja selbst gerne versuchen.
 
+Ein Ärgernis ist die schlechte Erweiterbarkeit der Berechnung der Leihgebühr. Grund dafür ist die Verwendung von
+switch für die Abfrage der unterschiedlichen Filmtypen. 
+
+```java
+    public double calculateFee() {
+        double thisAmount = 0;
+
+        // determine amounts for each line
+        switch( getMovie().getPriceCode() ) {
+            case Movie.REGULAR:
+                thisAmount += 2;
+                if(getDaysRented() > 2 )
+                    thisAmount += ( getDaysRented() - 2 ) * 1.5;
+                break;
+            case Movie.NEW_RELEASE:
+                thisAmount += getDaysRented() * 3;
+                break;
+            case Movie.CHILDRENS:
+                thisAmount += 1.5;
+                if( getDaysRented() > 3 )
+                    thisAmount += ( getDaysRented() - 3 ) * 1.5;
+                break;
+
+        }
+        return thisAmount;
+    }
+```
+
+Wenn wir den Code betrachten fällt auf, dass aufgrund der Werte eines anderen Objektes verzweigen. 
+Da ist meist keine gute Idee - wenn wir in unseren Methoden verzweigen müssen, 
+sollten wir das nur auf Basis der eigenen Daten tun, nicht auf Basis fremder.
+Hieraus folgt, dass getCharge in die Klasse Movie gehört!
+
+Verschieben wir also die Methode:
+
+Nach der Durchführung der Änderungen vereinfacht sich `Rental.calulateFee` zu: 
+```java
+    public double calculateFee() {
+        return getMovie().calculateFee( getDaysRented() );
+    }
+```
+
+In Movie gibt es eine gleichnamige Methode, mit Parameter daysRented:
+
+```java
+    public double calculateFee( int daysRented ) {
+        double thisAmount = 0;
+
+        // determine amounts for each line
+        switch( getPriceCode() ) {
+            case Movie.REGULAR:
+                thisAmount += 2;
+                if(daysRented > 2 )
+                    thisAmount += ( daysRented - 2 ) * 1.5;
+                break;
+            case Movie.NEW_RELEASE:
+                thisAmount += daysRented * 3;
+                break;
+            case Movie.CHILDRENS:
+                thisAmount += 1.5;
+                if( daysRented > 3 )
+                    thisAmount += ( daysRented - 3 ) * 1.5;
+                break;
+
+        }
+        return thisAmount;
+    }
+```
+
+Das Gleiche mache ich mit der Berechnung der Bonuspunkte, da auch hier aufgrund des Filmtyps verzweigt wird.
+
+In Klasse Rental:
+```java
+    public  int calculateBonus() {
+        return getMovie().calculateBonus( getDaysRented() );
+    }
+```
+
+In Klasse Movie:
+```java
+    public  int calculateBonus( int daysRented ) {
+        if( ( getPriceCode() == Movie.NEW_RELEASE ) && daysRented > 1 )
+            // extra bonus point for new released movies
+            return 2;
+        else
+            return 1;
+    }
+```
+
+Wir haben hier verschiedene Arten von Filmen, die gleiche Fragen verschieden beantworten.
+Das hört sich nach einer Aufgabe für Unterklassen an. Wir können drei Unterklassen von Movie
+bilden, von denen jede ihre eigene Version von `calculateFee() und calculateBonus() haben kann.
+
+![Klassendiagramm Polymorphy](./VideoStore/doc/Simple%20Polymorphy.png)
+
+Dies ermöglicht es mir, den switch-Befehl durch Polymorphismus zu ersetzen. Leider hat dies einen kleinen Fehler. 
+Es funktioniert nicht, da ein Film seine Klassifizierung im "Laufe seines Lebens" ändern kann. Ein Objekt kann
+jedoch nicht einfach seine Klasse ändern. Hierfür gibt es jedoch eine Lösung, nämlich das State-Pattern.
+
+![Klassendiagramm StatePattern](./VideoStore/doc/src_after_refactoring_State_Pattern.png)
+ 
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
