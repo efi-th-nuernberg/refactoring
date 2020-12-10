@@ -539,8 +539,8 @@ jedoch nicht einfach seine Klasse ändern. Hierfür gibt es jedoch eine Lösung,
  2. Wir passen Movie so an, dass es jetzt Price nutzt, statt PriceCode.
  
  3. Wir verschieben die Berechnungen der Leihgebühr und der Boni in die Unterklassen und passen das Interface an.   
-    
- 1. Price und Unterklassen einführen
+ 
+ **Wir starten, damit Price und Unterklassen einzuführen:**
  
  ```java
 public interface Price {
@@ -569,7 +569,7 @@ public class NewReleasePrice implements Price{
 }
 ```
 
-2. Movie anpassen:
+**Jetzt passen wir Movie an:**
 
 ```java
 public class Movie {
@@ -612,7 +612,7 @@ public class Movie {
 }
 ```
 
-3. Berechnung verschieben
+**Schließlich verschieben wir die Berechnung in die Unterklassen:**
 
 ```java
 public interface Price {
@@ -640,9 +640,68 @@ public class RegularPrice implements Price {
         return 1;
     }
 }
-
 ...
 ```
+ 
+ Movie sieht jetzt so aus:
+
+ ```java
+public class Movie {
+
+    public static final int CHILDRENS = 2;
+    public static final int REGULAR = 0;
+    public static final int NEW_RELEASE = 1;
+
+    private final String title;
+    private Price price;
+
+    public Movie( String title, int priceCode ) {
+        this.title = title;
+        setPriceCode( priceCode );
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getPriceCode() {
+        return price.getPriceCode();
+    }
+
+    public void setPriceCode( int priceCode ) {
+        switch( priceCode ) {
+            case Movie.REGULAR:
+                this.price = new RegularPrice();
+                break;
+            case Movie.CHILDRENS:
+                this.price = new ChildrensPrice();
+                break;
+            case Movie.NEW_RELEASE:
+                this.price = new NewReleasePrice();
+                break;
+            default:
+                throw new IllegalArgumentException( "Incorrect Price Code" );
+        }
+    }
+
+    public double calculateFee( int daysRented ) {
+        return price.getFee( daysRented );
+    }
+
+    public  int calculateBonus( int daysRented ) {
+        return price.getBonus( daysRented );
+    }
+}
+```
+ 
+ Es ist jetzt viel einfache, die Klassenstruktur von Filmen und die Regeln für die Abrechnung und die Bonuspunkte zu verändern.
+ Auch das Einführen neuer Preisklassen ist jetzt sehr einfach.
+ 
+ Das ist ein sehr einfaches Beispiel, aber es gibt Ihnen bereits ein Gefühl dafür, was Refaktorisieren ist.
+ Die wichtigste, was Sie viellicht mitnehmen konnten, ist der Rhythmus des Refaktorisierens:
+ Testen -> Kleine Änderungen -> Testen -> kleine Änderungen -> Testen.
+ 
+ Dieser Rhythmus ermöglicht es uns, schnelle und vor allem sichere Fortschritte beim Verbessern der Codebasis.  
  
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
