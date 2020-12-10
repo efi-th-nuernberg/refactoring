@@ -426,7 +426,9 @@ public String statement() {
     }
 ```
 
-Normalerweise macht man das natürlich in zwei Schritten. Testen nie vergessen.
+Normalerweise macht man das natürlich in zwei Schritten. Dabei die Ausführung der Tests nie vergessen!
+
+Jetzt ist sehr viel einfacher, eine Methode html-Statement zu schreiben!
 
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
