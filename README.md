@@ -18,7 +18,7 @@
 
  Die Elemente der Videothek werden durch drei Klassen repräsentiert.
 
-  
+  ![Klassendiagramm Ausgangspunkt](./VideoStore/doc/VideostoreClasses_000.png)
 
  **Movie** ist nur eine einfache Datenklasse.
 
