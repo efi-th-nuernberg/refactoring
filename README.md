@@ -698,8 +698,8 @@ public class Movie {
  Auch das Einführen neuer Preisklassen ist jetzt sehr einfach.
  
  Das ist ein sehr einfaches Beispiel, aber es gibt Ihnen bereits ein Gefühl dafür, was Refaktorisieren ist.
- Die wichtigste, was Sie viellicht mitnehmen konnten, ist der Rhythmus des Refaktorisierens:
- Testen -> Kleine Änderungen -> Testen -> kleine Änderungen -> Testen.
+ Die wichtigste, was Sie vielleicht mitnehmen konnten, ist der Rhythmus des Refaktorisierens:
+ Testen -> kleine Änderungen -> Testen -> kleine Änderungen -> Testen.
  
  Dieser Rhythmus ermöglicht es uns, schnelle und vor allem sichere Fortschritte beim Verbessern der Codebasis.  
  
