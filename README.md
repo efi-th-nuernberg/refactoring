@@ -532,5 +532,117 @@ jedoch nicht einfach seine Klasse ändern. Hierfür gibt es jedoch eine Lösung,
 
 ![Klassendiagramm StatePattern](./VideoStore/doc/src_after_refactoring_State_Pattern.png)
  
+ Wir führen für die Verbesserung 3 Schritte durch
+ 1. Wir führen ein Interface Price ein, die nur die Methode getPriceCode enthält.
+    Weiterhin führen wir drei Unterklassen ein (RegularPrice, ChildrensPrice, NewReleasePrice), die alle das Interface Price implementieren und einen PriceCode zurückgeben.
+    
+ 2. Wir passen Movie so an, dass es jetzt Price nutzt, statt PriceCode.
+ 
+ 3. Wir verschieben die Berechnungen der Leihgebühr und der Boni in die Unterklassen und passen das Interface an.   
+    
+ 1. Price und Unterklassen einführen
+ 
+ ```java
+public interface Price {
+    int getPriceCode();
+}
+
+public class RegularPrice implements Price {
+    @Override
+    public int getPriceCode() {
+        return Movie.REGULAR;
+    }
+}
+
+public class ChildrensPrice implements Price {
+    @Override
+    public int getPriceCode() {
+        return Movie.CHILDRENS;
+    }
+}
+
+public class NewReleasePrice implements Price{
+    @Override
+    public int getPriceCode() {
+        return Movie.NEW_RELEASE;
+    }
+}
+```
+
+2. Movie anpassen:
+
+```java
+public class Movie {
+
+    public static final int CHILDRENS = 2;
+    public static final int REGULAR = 0;
+    public static final int NEW_RELEASE = 1;
+
+    private final String title;
+    private Price price;
+
+    public Movie( String title, int priceCode ) {
+        this.title = title;
+        setPriceCode( priceCode );
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getPriceCode() {
+        return price.getPriceCode();
+    }
+
+    public void setPriceCode( int priceCode ) {
+        switch( priceCode ) {
+            case Movie.REGULAR:
+                this.price = new RegularPrice();
+                break;
+            case Movie.CHILDRENS:
+                this.price = new ChildrensPrice();
+                break;
+            case Movie.NEW_RELEASE:
+                this.price = new NewReleasePrice();
+                break;
+            default:
+                throw new IllegalArgumentException( "Incorrect Price Code" );
+        }
+    }
+}
+```
+
+3. Berechnung verschieben
+
+```java
+public interface Price {
+    int getPriceCode();
+    double getFee( int daysRented );
+    int getBonus( int daysRented );
+}
+
+public class RegularPrice implements Price {
+    @Override
+    public int getPriceCode() {
+        return Movie.REGULAR;
+    }
+
+    @Override
+    public double getFee( int daysRented ) {
+        double thisAmount = 2;
+        if(daysRented > 2 )
+            thisAmount += ( daysRented - 2 ) * 1.5;
+        return thisAmount;
+    }
+
+    @Override
+    public int getBonus( int daysRented ) {
+        return 1;
+    }
+}
+
+...
+```
+ 
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
