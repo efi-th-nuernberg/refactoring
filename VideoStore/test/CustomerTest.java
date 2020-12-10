@@ -204,4 +204,42 @@ class CustomerTest {
         System.out.println( invoice_text );
     }
 
+    @Test
+    void test_statement_one_students_two_days() {
+        String expected_text = "Rental Record for customer A\n" +
+                "\tstudents_movie\tdays rented: 2  = 1.0\n" +
+                "Amount owed is 1.0\n" +
+                "You earned 1 frequent renter points";
+
+        Movie regular_movie = new Movie( "students_movie", Movie.STUDENTS );
+        Rental rental = new Rental( regular_movie, 2 );
+        customer.addRental( rental );
+
+        String invoice_text = customer.statement();
+        assertEquals( expected_text, invoice_text );
+
+        System.out.println( "test_statement_one_students_two_days" );
+        System.out.println( invoice_text );
+
+    }
+
+    @Test
+    void test_statement_one_students_three_days() {
+        String expected_text = "Rental Record for customer A\n" +
+                "\tstudents_movie\tdays rented: 3  = 3.0\n" +
+                "Amount owed is 3.0\n" +
+                "You earned 1 frequent renter points";
+
+        Movie regular_movie = new Movie( "students_movie", Movie.STUDENTS );
+        Rental rental = new Rental( regular_movie, 3 );
+        customer.addRental( rental );
+
+        String invoice_text = customer.statement();
+        assertEquals( expected_text, invoice_text );
+
+        System.out.println( "test_statement_one_students_three_days" );
+        System.out.println( invoice_text );
+
+    }
+
 }

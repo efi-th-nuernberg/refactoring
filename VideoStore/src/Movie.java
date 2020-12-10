@@ -1,8 +1,9 @@
 public class Movie {
 
-    public static final int CHILDRENS = 2;
     public static final int REGULAR = 0;
     public static final int NEW_RELEASE = 1;
+    public static final int CHILDRENS = 2;
+    public static final int STUDENTS = 3;
 
     private final String title;
     private Price price;
@@ -30,6 +31,9 @@ public class Movie {
                 break;
             case Movie.NEW_RELEASE:
                 this.price = new NewReleasePrice();
+                break;
+            case Movie.STUDENTS:
+                this.price = new StudentsPrice();
                 break;
             default:
                 throw new IllegalArgumentException( "Incorrect Price Code" );
