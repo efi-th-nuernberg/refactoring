@@ -532,6 +532,11 @@ jedoch nicht einfach seine Klasse ändern. Hierfür gibt es jedoch eine Lösung,
 
 ![Klassendiagramm StatePattern](./VideoStore/doc/src_after_refactoring_State_Pattern.png)
  
+ Dies ist eines jener Entwurfsmuster, die bereits 1995 von der sog. "Gang of Four" in *Designpatterns*<sup id="fn_2">[2](#footnote_2)</sup> veröffentlicht wurde. 
+ 
+ Design Patterns sind eine Sammlung bewährter Lösungsideen für bekannter Probleme in der Software-Entwicklung. 
+
+ 
  Wir führen für die Verbesserung 3 Schritte durch
  1. Wir führen ein Interface Price ein, die nur die Methode getPriceCode enthält.
     Weiterhin führen wir drei Unterklassen ein (RegularPrice, ChildrensPrice, NewReleasePrice), die alle das Interface Price implementieren und einen PriceCode zurückgeben.
@@ -705,3 +710,4 @@ public class Movie {
  
  ---
  <b id="footnote_1">(1)</b> Fowler, Martin: Refactoring, Improving the Design of Existing Code. 1999 [↩](#fn_1)
+ <b id="footnote_2">(2)</b> Gamma, Helm, Johnson, Vlissides: Designpatterns. 1995 [↩](#fn_2)
